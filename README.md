@@ -22,13 +22,13 @@ A FastAPI backend that uses popular LLMs to generate creative movie pitches from
 ### Prerequisites
 
 - Python 3.9+
-- OpenAI API key
+- OpenAI API (or preferred LLM) key
 
 ### Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/movie-pitch-backend.git
+git clone https://github.com/hayden-wolfe/movie-pitch-backend.git
 cd movie-pitch-backend
 
 # Create virtual environment
