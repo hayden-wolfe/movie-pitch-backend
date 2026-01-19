@@ -1,0 +1,14 @@
+# Secrets
+.env
+
+# Local System Junk
+__pycache__/
+*.pyc
+.DS_Store
+
+#Virtual Environment
+venv/
+.venv/
+
+# Editor Config
+.vscode/
