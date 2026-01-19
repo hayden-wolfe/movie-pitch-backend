@@ -1,0 +1,6 @@
+fastapi==0.127.0
+uvicorn==0.39.0
+pydantic==2.12.5
+pydantic-ai>=0.1.0
+python-dotenv==1.2.1
+slowapi==0.1.9
