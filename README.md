@@ -183,8 +183,8 @@ Type=simple
 User=pi
 WorkingDirectory=/home/pi/movie-pitch-backend
 Environment=PATH=/home/pi/movie-pitch-backend/venv/bin
-Environment=ENVIRONMENT=production
-ExecStart=/home/pi/movie-pitch-backend/venv/bin/gunicorn main:app -w 2 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000
+EnvironmentFile=/home/pi/movie-pitch-backend/.env
+ExecStart=/home/pi/movie-pitch-backend/venv/bin/gunicorn main:app -w 2 -k uvicorn.workers.UvicornWorker -b ${HOST}:${PORT}
 Restart=always
 RestartSec=10
 
