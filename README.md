@@ -97,6 +97,25 @@ Returns `{"status": "healthy"}` when the server is running.
 | `ALLOWED_ORIGINS` | Comma-separated list of allowed CORS origins | `http://localhost:3000,http://127.0.0.1:3000` |
 | `HOST` | Server bind address | `127.0.0.1` |
 | `PORT` | Server port | `8000` |
+| `ENVIRONMENT` | Set to `production` to disable docs and reduce logging | `development` |
+
+## 🚀 Production Deployment
+
+### Production Mode
+
+Set `ENVIRONMENT=production` in your `.env` to:
+- Disable `/docs`, `/redoc`, and `/openapi.json` endpoints
+- Reduce logging to warnings only
+- Add security headers to all responses
+
+### Production Server
+
+For production, use gunicorn with uvicorn workers instead of `python main.py`:
+
+```bash
+# Run with multiple workers (adjust -w based on CPU cores)
+gunicorn main:app -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000
+```
 
 ## 🍓 Raspberry Pi Deployment
 
@@ -164,7 +183,8 @@ Type=simple
 User=pi
 WorkingDirectory=/home/pi/movie-pitch-backend
 Environment=PATH=/home/pi/movie-pitch-backend/venv/bin
-ExecStart=/home/pi/movie-pitch-backend/venv/bin/python main.py
+Environment=ENVIRONMENT=production
+ExecStart=/home/pi/movie-pitch-backend/venv/bin/gunicorn main:app -w 2 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000
 Restart=always
 RestartSec=10
 

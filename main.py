@@ -12,8 +12,11 @@ from slowapi.errors import RateLimitExceeded
 # 1. LOAD SECRETS & CONFIGURE LOGGING
 load_dotenv()
 
+# Detect environment mode
+is_production = os.getenv("ENVIRONMENT", "development") == "production"
+
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.WARNING if is_production else logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
@@ -63,9 +66,23 @@ pitch_agent = Agent(
 
 # 4. INITIALIZE APP WITH RATE LIMITING
 limiter = Limiter(key_func=get_remote_address)
-app = FastAPI(title="Movie Pitch Generator Backend")
+app = FastAPI(
+    title="Movie Pitch Generator Backend",
+    docs_url=None if is_production else "/docs",
+    redoc_url=None if is_production else "/redoc",
+    openapi_url=None if is_production else "/openapi.json",
+)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+# Security headers middleware
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    return response
 
 # Configure CORS from environment variable
 allowed_origins = os.getenv(
